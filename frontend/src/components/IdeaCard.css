@@ -1,0 +1,142 @@
+.idea-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.idea-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.idea-header {
+  margin-bottom: 16px;
+}
+
+.idea-title {
+  margin: 0 0 12px 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.idea-title a {
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.idea-title a:hover {
+  color: var(--accent-color);
+}
+
+.idea-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.pitcher {
+  font-weight: 500;
+}
+
+.date {
+  opacity: 0.8;
+}
+
+.idea-description {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0 0 20px 0;
+  flex-grow: 1;
+}
+
+.idea-footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.idea-stats {
+  display: flex;
+  gap: 16px;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.comments-count,
+.likes-count {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.idea-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.like-btn {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+}
+
+.like-btn:hover {
+  background-color: var(--bg-secondary);
+  transform: scale(1.1);
+}
+
+.like-btn.liked {
+  animation: heartBeat 0.3s ease;
+}
+
+.like-btn.loading {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@keyframes heartBeat {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .idea-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+  
+  .idea-actions {
+    justify-content: space-between;
+  }
+  
+  .idea-stats {
+    justify-content: center;
+  }
+  
+  .idea-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+} 
