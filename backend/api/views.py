@@ -52,6 +52,15 @@ class IdeaViewSet(viewsets.ModelViewSet):
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data)
 
+    @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
+    def add_comment(self, request, pk=None):
+        idea = self.get_object()
+        serializer = CommentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(commenter=request.user, idea=idea)
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer

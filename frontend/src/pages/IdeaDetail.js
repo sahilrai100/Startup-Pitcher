@@ -6,7 +6,7 @@ import './IdeaDetail.css';
 
 const IdeaDetail = () => {
   const { id } = useParams();
-  const { user, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   
   const [idea, setIdea] = useState(null);
@@ -20,10 +20,22 @@ const IdeaDetail = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (id) {
+    if (id && id !== 'undefined') {
       fetchIdea();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+
+  // Guard for undefined id (after hooks)
+  if (!id || id === 'undefined') {
+    return (
+      <div className="idea-detail-page">
+        <div className="container">
+          <div className="error">Invalid idea ID. Please return to the home page and select a valid idea.</div>
+        </div>
+      </div>
+    );
+  }
 
   const fetchIdea = async () => {
     setLoading(true);
@@ -70,7 +82,7 @@ const IdeaDetail = () => {
 
     setCommentLoading(true);
     try {
-      const response = await axios.post(`/api/ideas/${id}/comments/`, {
+      const response = await axios.post(`/api/ideas/${id}/add_comment/`, {
         content: newComment
       });
       setComments([response.data, ...comments]);

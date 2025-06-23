@@ -52,7 +52,7 @@ const SubmitIdea = () => {
       setFormData({ title: '', description: '' });
       
       setTimeout(() => {
-        navigate(`/idea/${response.data.id}`);
+        navigate('/');
       }, 2000);
     } catch (error) {
       setError(error.response?.data?.title?.[0] || 

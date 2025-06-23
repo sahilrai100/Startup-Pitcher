@@ -55,6 +55,8 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
+      // Remove Authorization header before registration
+      delete axios.defaults.headers.common['Authorization'];
       const response = await axios.post('/api/auth/register/', userData, {
         headers: {
           'Content-Type': 'application/json'
