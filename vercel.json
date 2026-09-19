@@ -13,7 +13,7 @@
   ],
   "routes": [
     { "src": "/(api|admin|django-static)(/.*)?", "dest": "backend/startup_platform/wsgi.py" },
-    { "src": "/(.*\.[a-zA-Z0-9]+)", "dest": "/frontend/$1" },
+    { "src": "/(.*[.][a-zA-Z0-9]+)", "dest": "/frontend/$1" },
     { "src": "/(.*)", "dest": "/frontend/index.html" }
   ],
   "regions": ["sin1"]
