@@ -2,7 +2,8 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
 // Configure axios base URL
-axios.defaults.baseURL = 'http://127.0.0.1:8000';
+// Same origin in production (Vercel serves the API under /api), Django dev server locally
+axios.defaults.baseURL = process.env.REACT_APP_API_URL ?? (process.env.NODE_ENV === 'production' ? '' : 'http://127.0.0.1:8000');
 
 const AuthContext = createContext();
 
