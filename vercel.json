@@ -1,0 +1,20 @@
+{
+  "builds": [
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": { "distDir": "build" }
+    },
+    {
+      "src": "backend/startup_platform/wsgi.py",
+      "use": "@vercel/python",
+      "config": { "maxLambdaSize": "50mb" }
+    }
+  ],
+  "routes": [
+    { "src": "/(api|admin|django-static)(/.*)?", "dest": "backend/startup_platform/wsgi.py" },
+    { "src": "/(.*\.[a-zA-Z0-9]+)", "dest": "/frontend/$1" },
+    { "src": "/(.*)", "dest": "/frontend/index.html" }
+  ],
+  "regions": ["sin1"]
+}
