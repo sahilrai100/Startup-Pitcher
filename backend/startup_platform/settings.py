@@ -6,16 +6,23 @@ from pathlib import Path
 import os
 from datetime import timedelta
 
+import dj_database_url
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-your-secret-key-here-change-in-production'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-local-dev-only')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True' if not os.environ.get('VERCEL') else 'False') == 'True'
+
+ON_VERCEL = bool(os.environ.get('VERCEL'))
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+if ON_VERCEL:
+    ALLOWED_HOSTS.append('.vercel.app')
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Application definition
 INSTALLED_APPS = [
@@ -33,6 +40,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -62,11 +70,12 @@ TEMPLATES = [
 WSGI_APPLICATION = 'startup_platform.wsgi.application'
 
 # Database
+# PostgreSQL (Neon) via DATABASE_URL in production, SQLite locally
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=0 if ON_VERCEL else 600,
+    )
 }
 
 # Password validation
@@ -92,8 +101,10 @@ USE_I18N = True
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
-STATIC_URL = 'static/'
+# The React build owns /static/, so Django admin assets live under /django-static/
+STATIC_URL = 'django-static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+WHITENOISE_USE_FINDERS = ON_VERCEL
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -134,6 +145,7 @@ CORS_ALLOW_CREDENTIALS = True
 
 # CSRF settings
 CSRF_TRUSTED_ORIGINS = [
+    "https://*.vercel.app",
     "http://localhost:3000",
     "http://localhost:3001",
     "http://127.0.0.1:3000",
